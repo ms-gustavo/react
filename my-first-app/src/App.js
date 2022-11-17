@@ -1,11 +1,9 @@
-import Loremipsum from "./components/Loremipsum";
-import HelloWorld from "./hello";
+import Planets from "./components/planets";
 
 function App() {
   return (
     <div>
-      <HelloWorld />
-      <Loremipsum />
+      <Planets />
     </div>
   );
 }

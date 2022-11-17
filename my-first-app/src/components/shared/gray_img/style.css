@@ -1,0 +1,9 @@
+.gray-img {
+  width: 200px;
+  height: 200px;
+  filter: grayscale(100%);
+}
+
+.color-img {
+  width: 300px;
+}
