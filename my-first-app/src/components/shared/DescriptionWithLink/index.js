@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 
 const DescriptionWithLink = (props) => {
+  if (!props.text) return null;
   if (props.link) {
     return (
       <Fragment>

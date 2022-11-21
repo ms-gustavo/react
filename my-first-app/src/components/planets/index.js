@@ -1,27 +1,63 @@
 import React, { Fragment } from "react";
 import Planet from "./planet";
 
-const Planets = () => {
-  return (
-    <Fragment>
-      <h3>Planet List</h3>
-      <hr />
-      <Planet
-        name="Mercúrio"
-        text="Mercúrio é o menor e mais interno planeta do Sistema Solar, orbitando o Sol a cada 87,969 dias terrestres. "
-        img_url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Mercury_in_color_-_Prockter07-edit1.jpg/280px-Mercury_in_color_-_Prockter07-edit1.jpg"
-        link="https://pt.wikipedia.org/wiki/Merc%C3%BArio_(planeta)"
-        title_with_underline={true}
-      />
-      <hr />
-      <Planet
-        name="Terra"
-        text="A Terra é o terceiro planeta mais próximo do Sol, o mais denso e o quinto maior dos oito planetas do Sistema Solar. É também o maior dos quatro planetas telúricos."
-        img_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/The_Blue_Marble_%28remastered%29.jpg/300px-The_Blue_Marble_%28remastered%29.jpg"
-        gray={true}
-      />
-    </Fragment>
-  );
-};
+async function getPlanets() {
+  let response = await fetch("http://localhost:3000/api/planets.json");
+  let data = await response.json();
+  return data;
+}
+
+class Planets extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      planets: [],
+    };
+  }
+
+  componentDidMount() {
+    getPlanets().then((data) => {
+      this.setState((state) => ({
+        planets: data["planets"],
+      }));
+    });
+  }
+
+  removeLast = () => {
+    let new_planets = [...this.state.planets];
+    new_planets.pop();
+    this.setState((state) => ({
+      planets: new_planets,
+    }));
+  };
+
+  duplicateLastPlanet = () => {
+    let last_planet = this.state.planets[this.state.planets.length - 1];
+    this.setState((state) => ({
+      planets: [...this.state.planets, last_planet],
+    }));
+  };
+
+  render() {
+    return (
+      <Fragment>
+        <h3>Planet List</h3>
+        <button onClick={this.removeLast}>Remove Last</button>
+        <button onClick={this.duplicateLastPlanet}> Duplicate Last</button>
+        <hr />
+        {this.state.planets.map((planet, index) => (
+          <Planet
+            id={planet.id}
+            name={planet.name}
+            text={planet.text}
+            img_url={planet.img_url}
+            link={planet.link}
+            key={index}
+          />
+        ))}
+      </Fragment>
+    );
+  }
+}
 
 export default Planets;
