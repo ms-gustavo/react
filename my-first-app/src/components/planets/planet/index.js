@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import GrayImg from "../../shared/gray_img/index";
 import DescriptionWithLink from "../../shared/DescriptionWithLink";
 
@@ -8,48 +8,39 @@ async function getSatellites(id) {
   return data;
 }
 
-class Planet extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      satellites: [],
-    };
-  }
+const Planet = (props) => {
+  const [satellites, setSattelites] = useState([]);
 
-  componentDidMount() {
-    getSatellites(this.props.id).then((data) => {
-      this.setState((state) => ({
-        satellites: data["satellites"],
-      }));
+  useEffect(() => {
+    getSatellites(props.id).then((data) => {
+      setSattelites(data["satellites"]);
     });
-  }
+  }, []);
 
-  render() {
-    let title;
-    if (this.props.title_with_underline)
-      title = (
-        <h4>
-          <u>{this.props.name}</u>
-        </h4>
-      );
-    else title = <h4>{this.props.name}</h4>;
-    return (
-      <div>
-        {title}
-        <p>
-          <DescriptionWithLink text={this.props.text} link={this.props.link} />
-          <GrayImg img_url={this.props.img_url} gray={this.props.gray} />
-          <h4>Satélites</h4>
-          <ul>
-            {this.state.satellites.map((satellite, index) => (
-              <li key={index}>{satellite.name}</li>
-            ))}
-          </ul>
-          <hr />
-        </p>
-      </div>
+  let title;
+  if (props.title_with_underline)
+    title = (
+      <h4>
+        <u>{props.name}</u>
+      </h4>
     );
-  }
-}
+  else title = <h4>{props.name}</h4>;
+  return (
+    <div>
+      {title}
+      <p>
+        <DescriptionWithLink text={props.text} link={props.link} />
+        <GrayImg img_url={props.img_url} />
+        <h4>Satélites</h4>
+        <ul>
+          {satellites.map((satellite, index) => (
+            <li key={index}>{satellite.name}</li>
+          ))}
+        </ul>
+        <hr />
+      </p>
+    </div>
+  );
+};
 
 export default Planet;
